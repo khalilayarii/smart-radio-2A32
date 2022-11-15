@@ -1,88 +1,137 @@
 #include "personels.h"
 #include <QSqlQuery>
 #include <QtDebug>
-#include<QSqlQueryModel>
-#include<QObject>
-#include<QTableView>
-#include <QSqlTableModel>
-Personels::Personels()
+#include <QObject>
+#include <QSqlQueryModel>
+#include<QMessageBox>
+
+personels::personels()
 {
- CIN= 0;
- numero= 0;
- nom="";
- prenom="";
- adresse="";
+    cin=0; nom="";
+    prenom="";
 }
-Personels::Personels(int CIN,QString adresse,QString nom,QString prenom,int numero)
-{
-    this->CIN=CIN;
+personels::personels(int cin, QString nom , QString prenom, QString role)
+{this->cin=cin;
     this->nom=nom;
     this->prenom=prenom;
-    this->adresse=adresse;
-     this->numero=numero;
-}
-int Personels::getCIN(){return CIN;}
-int Personels::getnumero(){return numero;}
-QString Personels::getnom(){return nom;}
-QString Personels::getprenom(){return prenom;}
-QString Personels::getadresse(){return adresse;}
-
-void Personels::setCIN(int CIN){this->CIN=CIN;}
-void Personels::setnom(QString nom){this->nom=nom;}
-void Personels::setprenom(QString prenom){this->prenom=prenom;}
-void Personels::setadresse(QString adresse){this->adresse=adresse;}
-void Personels::setnumero(int numero){this->numero=numero;}
-
-bool Personels::ajouter()
-{ //bool test=true;
-
-    QString CIN_strings = QString::number(CIN);
-    QString numero_strings = QString::number(numero);
-
-       QSqlQuery query;
-          query.prepare("INSERT INTO PERSONENELS (CIN, nom, prenom,adresse,numero) ""VALUES (:CIN, :nom, :prenom, :adresse ,:numero)");
-          query.bindValue(CIN, CIN_strings);
-          query.bindValue(nom, nom);
-          query.bindValue(prenom, prenom);
-          query.bindValue(adresse, adresse);
-          query.bindValue(numero, numero_strings);
-
-         return  query.exec();
-
-   //return  test;
+    this->role=role;
 
 }
-bool Personels::supprimer(int CIN)
+
+int personels::getcin(){return cin;}
+QString personels::getnom(){return nom;}
+QString personels::getprenom(){return prenom;}
+
+
+void personels::setcin(int cin ){this->cin=cin;}
+void personels::setnom(QString nom){this->nom=nom;}
+void personels::setprenom(QString prenom){this->prenom=prenom;}
+
+bool personels::ajouter()
+
+
 {
-
     QSqlQuery query;
-       query.prepare("Delete from personels where CIN=:CIN" );
+        QString res= QString::number (cin) ;
+        query.prepare ("INSERT INTO PERSONELS (CIN, NOM, PRENOM,role) "
+                       "VALUES (:cin,:nom,:prenom,:role)");
+        query.bindValue(":cin",res);
+        query.bindValue(":nom",nom);
+        query.bindValue(":prenom",prenom);
+        query.bindValue(":role",role);
 
-       query.bindValue(0,'CIN_');
-
-
-      return  query.exec();
-
-
-
+        return query.exec () ;
 
 
 }
-QSqlQueryModel* Personels::afficher()
+QSqlQueryModel * personels::afficher()
 {
+    QSqlQueryModel * model=new QSqlQueryModel();
 
-
-    QSqlQueryModel* model= new QSqlQueryModel();
-          model->setQuery("SELECT * FROM Personels");
-          model->setHeaderData(0, Qt::Horizontal, QObject::tr("CIN"));
-          model->setHeaderData(1, Qt::Horizontal, QObject::tr("nom"));
-          model->setHeaderData(2, Qt::Horizontal, QObject::tr("prenom"));
-          model->setHeaderData(3, Qt::Horizontal, QObject::tr("adresse"));
-          model->setHeaderData(4, Qt::Horizontal, QObject::tr("numero"));
+    model->setQuery("SELECT * FROM personels");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("cin"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("nom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("prenom"));
+    model->setHeaderData(4, Qt::Horizontal, QObject::tr("role"));
 
 
     return model;
-   }
+}
 
 
 
+
+bool personels::supprimer(int cin)
+{
+    QSqlQuery query;
+      QString res =QString::number(cin);
+    query.prepare(" Delete from personels where cin=:cin");
+    query.bindValue(":cin", res);
+
+  return  query.exec();
+}
+
+
+bool personels::modifier()
+{
+QSqlQuery query;
+QString res= QString::number(cin);
+query.prepare("update personels set cin= :cin, nom= :nom, prenom= :prenom, role=:role where cin = :cin");
+query.bindValue(":cin", res);
+query.bindValue(":nom",nom);
+query.bindValue(":prenom",prenom );
+query.bindValue(":role",role);
+
+return    query.exec();
+}
+
+
+QSqlQueryModel *personels::trie_cin()
+{
+    QSqlQueryModel * model= new QSqlQueryModel();
+
+          model->setQuery("SELECT * FROM personels ORDER BY cin ");
+          model->setHeaderData(0,Qt::Horizontal,QObject::tr("cin"));
+          model->setHeaderData(1,Qt::Horizontal,QObject::tr("nom"));
+        model->setHeaderData(2,Qt::Horizontal,QObject::tr("prenom"));
+        model->setHeaderData(4, Qt::Horizontal, QObject::tr("role"));
+
+
+return model;
+}
+QStringList personels::listeadresses(QString var){
+    QSqlQuery query;
+    query.prepare("select DISTINCT("+var+") from personels");
+    query.exec();
+    QStringList list;
+    while(query.next())
+    {
+        list.append(query.value(0).toString());
+    }
+
+    return list;
+}
+int personels::calcul_adresses(QString adresse,QString val)
+{
+    QSqlQuery query;
+     query.prepare("select  * from personels  WHERE "+val+"=:adresse");
+     query.bindValue(":adresse", adresse );
+     query.exec();
+     int total=0;
+     while(query.next())
+     {
+       total++;
+     }
+     return total;
+}
+
+QSqlQueryModel *personels::rechercher(QString cin)
+{
+    QSqlQueryModel *model= new QSqlQueryModel();
+    model->setQuery("SELECT * FROM PERSONELS WHERE CIN LIKE'%"+cin+"%'");
+    model->setHeaderData(0, Qt::Horizontal, QObject::tr("cin"));
+    model->setHeaderData(1, Qt::Horizontal, QObject::tr("nom"));
+    model->setHeaderData(2, Qt::Horizontal, QObject::tr("prenom"));
+
+  return model;
+}

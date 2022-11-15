@@ -1,33 +1,40 @@
 #ifndef PERSONELS_H
 #define PERSONELS_H
-#include<QString>
-#include<QSqlQuery>
-#include<QSqlQueryModel>
-#include <QSqlTableModel>
-#include <QTableView>
-
 #include <QString>
-class Personels
+#include <QSqlQuery>
+#include <QSqlQueryModel>
+
+class personels
 {
 public:
-    Personels();
-    Personels(int,QString,QString,QString,int);
-    int getCIN();
-    int getnumero();
+    //constructeurs
+   personels();
+   personels(int cin,QString nom , QString prenom, QString role );
+     //getters
+    int getcin();
     QString getnom();
     QString getprenom();
-    QString getadresse();
-    void setCIN(int);
+ //setters
+    void setcin(int);
     void setnom(QString);
     void setprenom(QString);
-    void setadresse(QString);
-    void setnumero(int);
+
+
     bool ajouter();
     QSqlQueryModel * afficher();
-    bool supprimer (int);
+    bool supprimer(int);
+    bool modifier();
+    QSqlQueryModel *rechercher(QString cin);
+    QSqlQueryModel * trie_cin();
+    QStringList listeadresses(QString val);
+       int calcul_adresses(QString adresse,QString var);
+
 private:
-    int CIN,numero;
-    QString nom,prenom, adresse;
+    int cin;
+    QString nom ,prenom,role ;
+
 };
+
+
 
 #endif // PERSONELS_H
