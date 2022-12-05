@@ -20,6 +20,8 @@ public:
     void settypeE(QString);
     void setdate(QString);
     bool ajouter();
+    QSqlQueryModel * afficher();
+        bool supprimer (int);
 
 
 private:

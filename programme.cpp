@@ -34,8 +34,39 @@ bool programme::ajouter()
              query.bindValue(":date", date);
 
             return query.exec();
-             QSqlQueryModel*programme::afficher
+
 
     }
-}
+    bool programme::supprimer(QString nomE)
+    {
+
+        QSqlQuery query;
+           query.prepare("Delete from personels where nomE=:nomE" );
+
+           query.bindValue(0,'nomE_');
+
+
+          return  query.exec();
+          QSqlQueryModel* programme::afficher()
+          {
+
+
+              QSqlQueryModel* model= new QSqlQueryModel();
+                    model->setQuery("SELECT * FROM programme");
+                    model->setHeaderData(0, Qt::Horizontal, QObject::tr("nomE"));
+                    model->setHeaderData(1, Qt::Horizontal, QObject::tr("nomA"));
+                    model->setHeaderData(2, Qt::Horizontal, QObject::tr("typeE"));
+                    model->setHeaderData(3, Qt::Horizontal, QObject::tr("date"));
+
+
+
+              return model;
+             }
+
+
+
+
+
+    }
+     }
 
