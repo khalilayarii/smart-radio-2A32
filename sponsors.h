@@ -5,6 +5,7 @@
 #include <iostream>
 #include <QString>
 #include <QVariant>
+#include <QDebug>
 #include <QtSql/QtSql>
 #include <QtSql/QSqlDatabase>
 #include <QtSql/QSqlQuery>
@@ -32,18 +33,19 @@ public:
 
       bool ajouter();
       QSqlQueryModel* afficher();
-      bool supprimer(int);
-
+      bool supprimer(QString);
       bool modifier();
-          QSqlQueryModel * trie_NOM();
-      private:
-          float montant;
-          QString   matricule, domaine, nom;
-      };
-
-
-
-
+QStringList listeadresses(QString var);
+int calcul_adresses(QString adresse,QString val);
+QSqlQueryModel *rechercher(QString rech);
+    QSqlQueryModel *recherchernom(QString nom);
+    QSqlQueryModel *affichertriAZ();
+    QSqlQueryModel *affichertriZA();
 };
+
+
+
+
+
 
 #endif // SPONSORS_H
