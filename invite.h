@@ -1,26 +1,57 @@
 #ifndef INVITE_H
 #define INVITE_H
+#include "connection.h"
 
-#include <QString>
+
 class invite
 {
 public:
     invite();
-    invite(int cin,QString nom,QString prenom,int age,QString adress);
+    invite(int cin,QString nom,QString prenom,int age,QString adresse);
+
+
+    //getters
     int getcin();
-    int getage();
     QString getnom();
     QString getprenom();
-    QString getadress();
-    void setcin(int cin);
+    int getage();
+    QString getadresse();
+
+
+    //setters
+    void setcin(int);
+    void setnom(QString);
+    void setprenom(QString);
     void setage(int age);
-    void setnom(QString nom);
-    void setprenom(QString prenom);
-    void setadress(QString adress);
+    void setadresse(QString);
+
+    QSqlQueryModel * afficher();
+    bool supprimer(int);
+    bool modifier();
     bool ajouter();
+    QSqlQueryModel *rechercher(QString rech);
+    QSqlQueryModel *recherchernom(QString nom);
+    QSqlQueryModel *affichertriAZ();
+    QSqlQueryModel *affichertriZA();
+    QStringList listeadresses(QString val);
+    int calcul_adresses(QString adresse,QString var);
+
+
+
+
+
+
+
+
+
 private:
-    int cin,age;
-    QString nom,prenom,adress;
+
+    int cin;
+    QString nom;
+    QString prenom;
+    int age;
+    QString adresse;
+
 };
 
 #endif // INVITE_H

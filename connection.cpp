@@ -1,9 +1,11 @@
 #include "connection.h"
 
-Connection::Connection(){}
+connection::connection()
+{
 
+}
 
-bool Connection::createconnect()
+bool connection::createconnect()
 {
  db = QSqlDatabase::addDatabase("QODBC");
 bool test=false;
@@ -14,10 +16,5 @@ db.setPassword("28695683");//inserer mot de passe de cet utilisateur
 if (db.open()) test=true;
 return true;
 }
-void Connection::closeconnect(){db.close(); }
-
-
-
-
-
-
+void connection::closeconnect()
+{db.close(); }
